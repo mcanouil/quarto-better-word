@@ -1,0 +1,27 @@
+$-- Table-of-contents partial: TOC field plus the list-of-figures and
+$-- list-of-tables blocks. Included from template.xml as $toc.xml()$.
+$if(toc)$
+$-- Emit the table-of-contents field ourselves instead of $toc$, omitting the
+$-- w:dirty="true" flag that Pandoc sets. That flag makes Word prompt to update
+$-- fields on open ("contains fields that may refer to other files"); without it
+$-- Word opens silently and the reader updates the TOC on demand (F9 / right-click).
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="TOCHeading" />
+      </w:pPr>
+      $toc-title$
+    </w:p>
+    <w:p>
+      <w:r><w:fldChar w:fldCharType="begin" /></w:r>
+      <w:r><w:instrText xml:space="preserve">TOC \o "1-3" \h \z \u</w:instrText></w:r>
+      <w:r><w:fldChar w:fldCharType="separate" /></w:r>
+      <w:r><w:t xml:space="preserve">Update this field to build the table of contents.</w:t></w:r>
+      <w:r><w:fldChar w:fldCharType="end" /></w:r>
+    </w:p>
+$endif$
+$if(lof)$
+    $lof$
+$endif$
+$if(lot)$
+    $lot$
+$endif$

@@ -1,0 +1,20 @@
+title: Better Word
+author: Mickaël Canouil
+version: 0.0.0
+quarto-required: ">=1.9"
+contributes:
+  formats:
+    docx:
+      toc: true
+      template: template.xml
+      filters:
+        - at: post-quarto
+          path: title-block.lua
+        - at: post-quarto
+          path: landscape-page-size.lua
+      # Shared page geometry (twips). Consumed as template variables by
+      # template.xml and read from metadata by landscape-page-size.lua so the
+      # base and landscape sections stay in sync. Defaults to A4 portrait.
+      docx-page-width: 11906
+      docx-page-height: 16838
+      docx-page-margin: 1440

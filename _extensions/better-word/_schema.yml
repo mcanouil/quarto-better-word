@@ -1,0 +1,28 @@
+# _schema.yml for the "better-word" format extension.
+# Describes format-specific options for IDE tooling and runtime validation.
+
+$schema: https://m.canouil.dev/quarto-wizard/assets/schema/v2/extension-schema.json
+
+# Page geometry shared between template.xml (base w:sectPr) and the
+# landscape-page-size.lua fix-up filter. Values are in twips (1/1440 inch).
+formats:
+  better-word-docx:
+    docx-page-width:
+      type: integer
+      minimum: 1
+      default: 11906
+      description: "Base page width in twips (A4 portrait width by default)."
+    docx-page-height:
+      type: integer
+      minimum: 1
+      default: 16838
+      description: "Base page height in twips (A4 portrait height by default)."
+    docx-page-margin:
+      type: integer
+      minimum: 0
+      default: 1440
+      description: "Page margin applied to all four sides in twips (1in by default)."
+    docx-title-page-break:
+      type: boolean
+      default: false
+      description: "Insert a page break after the title block front matter."

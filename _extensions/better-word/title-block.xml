@@ -1,0 +1,59 @@
+$-- Title-block partial: the title area (logo, title, subtitle, categories,
+$-- description), then the title-metadata partial, then an opt-in page break.
+$-- Included from template.xml as $title-block.xml()$. Mirrors Quarto's two-level
+$-- html split (title-block.html includes title-metadata.html).
+$--
+$-- Structural customisation a reference-doc alone cannot do:
+$-- - An optional centred title logo from the title-logo metadata image.
+$-- - A rule under the title, and an opt-in page break after the front matter
+$--   (docx-title-page-break).
+$-- - Categories and description paragraphs from the same metadata Quarto's html
+$--   title block uses.
+$--
+$-- Title, subtitle, and categories render as inlines: they produce their own
+$-- runs and must never be wrapped in <w:t> or put in an attribute value.
+$-- Description renders as block-level paragraphs, so it is emitted directly (like
+$-- the abstract and body), never wrapped in a <w:p>. Only plain values Quarto
+$-- stores as strings (style ids) are safe inside <w:t> or attributes.
+$if(title-logo)$
+    <w:p>
+      <w:pPr>
+        <w:jc w:val="center" />
+      </w:pPr>
+      $title-logo$
+    </w:p>
+$endif$
+$if(title)$
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="$title-style-id$" />
+        <w:pBdr>
+          <w:bottom w:val="single" w:sz="8" w:space="4" w:color="auto" />
+        </w:pBdr>
+      </w:pPr>
+      $title$
+    </w:p>
+$endif$
+$if(subtitle)$
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="$subtitle-style-id$" />
+      </w:pPr>
+      $subtitle$
+    </w:p>
+$endif$
+$if(categories)$
+    <w:p>
+$for(categories)$      $categories$$sep$<w:r><w:t xml:space="preserve">, </w:t></w:r>
+$endfor$
+    </w:p>
+$endif$
+$if(description)$
+    $description$
+$endif$
+$title-metadata.xml()$
+$if(docx-title-page-break)$
+    <w:p>
+      <w:r><w:br w:type="page" /></w:r>
+    </w:p>
+$endif$

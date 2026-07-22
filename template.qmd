@@ -1,0 +1,114 @@
+---
+title: "Better Word Template Playground"
+subtitle: "Custom OpenXML Pandoc Template"
+title-logo: "![](logo.svg){height=2cm}"
+author:
+  - name:
+      given: Robin
+      family: Everhart
+    orcid: 0000-0000-0000-0000
+    email: robin.everhart@example.org
+    corresponding: true
+    affiliations:
+      - ref: uni
+      - ref: lab
+  - name: Sam Okoro
+    affiliations:
+      - ref: uni
+  - name: Priya Chandra
+    affiliations:
+      - ref: lab
+affiliations:
+  - id: uni
+    name: Fictional University
+    department: Department of Examples
+    city: Springfield
+    country: Freedonia
+  - id: lab
+    name: Placeholder Research Institute
+    city: Metropolis
+    country: Ruritania
+date: today
+date-modified: today
+doi: 10.5555/12345678
+description: |
+  A short description of the document, rendered in the title block just like
+  Quarto's HTML format.
+categories:
+  - Quarto
+  - OpenXML
+  - Word
+keywords:
+  - docx
+  - template
+  - title block
+abstract: |
+  This document is a playground for Quarto's `docx` format driven by a custom
+  OpenXML Pandoc template. It shows how the title block, author and affiliation
+  metadata, page geometry, and landscape sections can be customised structurally,
+  in the spirit of the HTML and Typst templates.
+docx-title-page-break: true
+format:
+  better-word-docx: default
+---
+
+## Title Block
+
+The custom template builds a journal-style title block from Quarto's normalised
+`by-author` and `by-affiliation` metadata:
+
+- authors on a single line with superscript affiliation numbers;
+- a superscript `*` on the corresponding author;
+- clickable ORCID and email via field-code hyperlinks (no relationship needed);
+- a numbered affiliations list and a correspondence line.
+
+Compare the front matter above with the rendered `.docx` title block to see the
+effect.
+
+## Page Geometry
+
+The base page size and margins are defined once, as the shared `docx-page-width`,
+`docx-page-height`, and `docx-page-margin` metadata (in twips). The template
+consumes them in the base `w:sectPr`, and the `landscape-page-size.lua` filter
+reads the same values so landscape sections stay in sync.
+
+## Landscape Sections
+
+The section below is landscape. Its page size derives from the shared geometry
+(A4 landscape), and the preceding portrait section keeps its size and margins,
+which the built-in landscape filter otherwise drops.
+
+::: {.landscape}
+
+| Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 |
+| -------- | -------- | -------- | -------- | -------- | -------- |
+| A        | B        | C        | D        | E        | F        |
+| G        | H        | I        | J        | K        | L        |
+
+:::
+
+## Custom Styles
+
+Pandoc applies named Word styles from the reference document and creates any
+that are missing:
+
+::: {custom-style="Intense Quote"}
+
+This paragraph uses the `Intense Quote` Word style through a `custom-style` div.
+
+:::
+
+## Text Formatting
+
+The format supports standard Markdown formatting:
+
+- **Bold text** for emphasis.
+- *Italic text* for subtle emphasis.
+- `Code` for inline code.
+
+## Conclusion
+
+Everything below the title block mirrors Pandoc's `default.openxml`, so the body
+behaves exactly as Quarto expects.
+The template takes over the front matter and the base section properties, which
+is where advanced customisation lives.

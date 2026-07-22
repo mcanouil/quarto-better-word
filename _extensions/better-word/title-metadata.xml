@@ -1,0 +1,137 @@
+$-- Title-metadata partial: authors and affiliations, the published/modified
+$-- dates, DOI, the abstract box, and keywords. Included from title-block.xml as
+$-- $title-metadata.xml()$, mirroring Quarto's html title-metadata.html.
+$--
+$-- A journal-style block from the normalised by-author / by-affiliation model:
+$-- authors with superscript affiliation numbers, a superscript corresponding
+$-- marker, a numbered affiliations list, and a correspondence line with the
+$-- corresponding author's email and ORCID. It iterates docx-by-author /
+$-- docx-by-affiliation, a parallel model built by landscape-page-size.lua whose
+$-- numbers are raw-OpenXML text (so they can sit inside a superscript <w:t>);
+$-- Quarto's own by-author numbers are inlines and would nest a run in <w:t>,
+$-- which Word rejects.
+$--
+$-- Author and affiliation metadata (name.literal, affiliation name/department/
+$-- ..., date-modified) render as inlines: they produce their own runs and must
+$-- never be wrapped in <w:t> or put in an attribute value. The $labels.*$
+$-- headings are inlines too (their own runs). The clickable DOI, ORCID, and
+$-- email (docx-doi, docx-by-author.orcid / .email) are field-code HYPERLINK
+$-- fields built as raw-OpenXML by landscape-page-size.lua, so they carry their
+$-- URL in a w:instr attribute and need no document.xml.rels entry. Only plain
+$-- values Quarto stores as strings (affiliation number, style ids) are safe
+$-- inside <w:t> or attributes.
+$if(docx-by-author)$
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="$author-style-id$" />
+      </w:pPr>
+$for(docx-by-author)$
+      $docx-by-author.name$
+$if(docx-by-author.affiliations)$<w:r><w:rPr><w:vertAlign w:val="superscript" /></w:rPr><w:t xml:space="preserve">$docx-by-author.affiliations$</w:t></w:r>$endif$
+$if(docx-by-author.corresponding)$<w:r><w:rPr><w:vertAlign w:val="superscript" /></w:rPr><w:t>*</w:t></w:r>$endif$
+$sep$<w:r><w:t xml:space="preserve">, </w:t></w:r>
+$endfor$
+    </w:p>
+$if(docx-by-affiliation)$
+$for(docx-by-affiliation)$
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="$author-style-id$" />
+      </w:pPr>
+      <w:r><w:rPr><w:vertAlign w:val="superscript" /></w:rPr><w:t xml:space="preserve">$docx-by-affiliation.number$</w:t></w:r>
+      <w:r><w:t xml:space="preserve"> </w:t></w:r>
+      $docx-by-affiliation.name$$if(docx-by-affiliation.department)$<w:r><w:t xml:space="preserve">, </w:t></w:r>$docx-by-affiliation.department$$endif$$if(docx-by-affiliation.city)$<w:r><w:t xml:space="preserve">, </w:t></w:r>$docx-by-affiliation.city$$endif$$if(docx-by-affiliation.country)$<w:r><w:t xml:space="preserve">, </w:t></w:r>$docx-by-affiliation.country$$endif$
+    </w:p>
+$endfor$
+$endif$
+$for(docx-by-author)$
+$if(docx-by-author.corresponding)$
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="$author-style-id$" />
+      </w:pPr>
+      <w:r><w:rPr><w:vertAlign w:val="superscript" /></w:rPr><w:t>*</w:t></w:r>
+      <w:r><w:t xml:space="preserve"> Correspondence: </w:t></w:r>
+      $docx-by-author.name$
+$if(docx-by-author.email)$
+      <w:r><w:t xml:space="preserve">, </w:t></w:r>
+      $docx-by-author.email$
+$endif$
+$if(docx-by-author.orcid)$
+      <w:r><w:t xml:space="preserve"> (ORCID: </w:t></w:r>
+      $docx-by-author.orcid$
+      <w:r><w:t xml:space="preserve">)</w:t></w:r>
+$endif$
+    </w:p>
+$endif$
+$endfor$
+$endif$
+$if(date)$
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="$date-style-id$" />
+      </w:pPr>
+      $labels.published$<w:r><w:t xml:space="preserve">: </w:t></w:r>$date$
+    </w:p>
+$endif$
+$if(date-modified)$
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="$date-style-id$" />
+      </w:pPr>
+      $labels.modified$<w:r><w:t xml:space="preserve">: </w:t></w:r>$date-modified$
+    </w:p>
+$endif$
+$if(doi)$
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="$date-style-id$" />
+      </w:pPr>
+      $labels.doi$<w:r><w:t xml:space="preserve">: </w:t></w:r>$docx-doi$
+    </w:p>
+$endif$
+$if(abstract)$
+$if(abstract-title)$
+    <w:p>
+      <w:pPr>
+        <w:pStyle w:val="$abstract-title-style-id$" />
+      </w:pPr>
+      <w:r><w:t xml:space="preserve">$abstract-title$</w:t></w:r>
+    </w:p>
+$endif$
+    <w:tbl>
+      <w:tblPr>
+        <w:tblW w:w="5000" w:type="pct" />
+        <w:tblBorders>
+          <w:top w:val="single" w:sz="4" w:space="0" w:color="auto" />
+          <w:left w:val="single" w:sz="4" w:space="0" w:color="auto" />
+          <w:bottom w:val="single" w:sz="4" w:space="0" w:color="auto" />
+          <w:right w:val="single" w:sz="4" w:space="0" w:color="auto" />
+        </w:tblBorders>
+      </w:tblPr>
+      <w:tblGrid>
+        <w:gridCol w:w="9026" />
+      </w:tblGrid>
+      <w:tr>
+        <w:tc>
+          <w:tcPr>
+            <w:tcW w:w="5000" w:type="pct" />
+            <w:shd w:val="clear" w:color="auto" w:fill="F2F2F2" />
+            <w:tcMar>
+              <w:top w:w="72" w:type="dxa" />
+              <w:left w:w="144" w:type="dxa" />
+              <w:bottom w:w="72" w:type="dxa" />
+              <w:right w:w="144" w:type="dxa" />
+            </w:tcMar>
+          </w:tcPr>
+          $abstract$
+        </w:tc>
+      </w:tr>
+    </w:tbl>
+    <w:p />
+$endif$
+$if(keywords)$
+    <w:p>
+      $labels.keywords$<w:r><w:t xml:space="preserve">: </w:t></w:r>$for(keywords)$$keywords$$sep$<w:r><w:t xml:space="preserve">, </w:t></w:r>$endfor$
+    </w:p>
+$endif$

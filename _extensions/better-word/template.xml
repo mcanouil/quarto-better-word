@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+$-- Custom OpenXML template for the "better-word" format extension.
+$--
+$-- Passed to Pandoc through Quarto's `template:` option; replaces Pandoc's
+$-- built-in `default.openxml`. Renders `word/document.xml` only; every other
+$-- part of the `.docx` package (styles.xml, header/footer parts, media,
+$-- relationships) still comes from Pandoc and the reference-doc, so the template
+$-- shapes structure and direct formatting but cannot define styles or create
+$-- new parts. These lines are DocTemplates ($--) comments and are not emitted;
+$-- an XML comment here would land in document.xml and Word would reject it.
+$--
+$-- The front matter and the table of contents live in partials next to this
+$-- file (title-block.xml, which itself includes title-metadata.xml, and
+$-- toc.xml), mirroring Quarto's own two-level template layout for other formats.
+$-- Pandoc resolves $name.xml()$ calls in the directory of the main template;
+$-- Quarto's `template-partials` option does not apply to docx.
+$--
+$-- The base section (w:sectPr) is built by landscape-page-size.lua from the
+$-- shared docx-page-* metadata and passed in through the docx-sectpr variable,
+$-- so the base page and .landscape sections share one geometry. When it is
+$-- absent, the template falls through to the reference-doc section properties
+$-- (sectpr).
+$--
+$-- Base reference: https://github.com/jgm/pandoc/blob/main/data/templates/default.openxml
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
+<w:body>
+$title-block.xml()$
+$for(include-before)$
+    $include-before$
+$endfor$
+$toc.xml()$
+    $body$
+$for(include-after)$
+    $include-after$
+$endfor$
+$if(docx-sectpr)$
+    $docx-sectpr$
+$else$
+    $sectpr$
+$endif$
+  </w:body>
+</w:document>

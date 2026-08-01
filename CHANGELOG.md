@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.1.0 (2026-08-01)
+
 ### Documentation
 
 - docs: Add a documentation website under `docs/`, built on the `atelier` project type and published to <https://m.canouil.dev/quarto-better-word/>, rendering a Word document with the format itself.

@@ -7,13 +7,13 @@ It works through a custom OpenXML template rather than a `reference-doc`, so it 
 ## Creating a New Document
 
 ```bash
-quarto use template mcanouil/quarto-better-word@0.0.0
+quarto use template mcanouil/quarto-better-word@0.1.0
 ```
 
 ## Installation For Existing Document
 
 ```bash
-quarto add mcanouil/quarto-better-word@0.0.0
+quarto add mcanouil/quarto-better-word@0.1.0
 ```
 
 This will install the extension under the `_extensions` subdirectory.

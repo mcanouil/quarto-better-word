@@ -1,0 +1,76 @@
+---
+title: "Better Word"
+subtitle: "A Word format with a real title block."
+description: "What the better-word format gives a Word document, how to use it, and what a custom OpenXML template can and cannot do."
+authors:
+  - name: "Mickaël CANOUIL, _Ph.D._"
+    orcid: "0000-0002-3396-4549"
+    url: "https://mickael.canouil.fr"
+---
+
+Quarto's Word output loses the front matter that matters in a manuscript: authors on one line with superscript affiliation numbers, a numbered affiliations list, a correspondence line, and a logo above the title.
+A `reference-doc` cannot bring them back, because it controls styles rather than structure.
+
+`better-word` supplies a custom OpenXML template instead, so the document itself is built the way a manuscript expects.
+
+[See one rendered by this site](preview.docx).
+
+## Starting a document
+
+```bash
+quarto use template {{< var extension.reference >}}
+```
+
+::: {.btn-group role="group" aria-label="Quarto Wizard installer options"}
+
+[Visual Studio Code](vscode://mcanouil.quarto-wizard/use?repo={{< var extension.wizard-reference >}}){.btn .btn-outline-primary title="Use {{< var extension.reference >}} in Visual Studio Code using the Quarto Wizard extension."}
+[Positron](positron://mcanouil.quarto-wizard/use?repo={{< var extension.wizard-reference >}}){.btn .btn-outline-primary title="Use {{< var extension.reference >}} in Positron using the Quarto Wizard extension."}
+[VSCodium](vscodium://mcanouil.quarto-wizard/use?repo={{< var extension.wizard-reference >}}){.btn .btn-outline-primary title="Use {{< var extension.reference >}} in VSCodium using the Quarto Wizard extension."}
+
+:::
+
+## Adding it to a document you already have
+
+```bash
+quarto add {{< var extension.reference >}}
+```
+
+This will install the extension under the `_extensions` subdirectory.
+If you are using version control, you will want to check in this directory.
+
+## Quick start
+
+```yaml
+format:
+  better-word-docx: default
+author:
+  - name:
+      given: Ada
+      family: Lovelace
+    orcid: 0000-0000-0000-0000
+    email: ada@example.org
+    corresponding: true
+    affiliations:
+      - ref: inst
+affiliations:
+  - id: inst
+    name: Example Institute
+    city: London
+    country: United Kingdom
+```
+
+The author model is Quarto's own [author and affiliation schema](https://quarto.org/docs/journals/authors.html#author-metadata), so nothing special has to be learned for it.
+
+See the [Reference](reference.qmd) for every option, and the [Examples](examples.qmd) for the front matter behind the rendered document.
+
+## Where it works
+
+Word, through Pandoc's OpenXML template support, which needs Pandoc 3.2.1 or later.
+
+## Links
+
+- [Reference](reference.qmd) for every option and the capability boundary.
+- [Examples](examples.qmd) for worked front matter.
+- [A rendered document](preview.docx), built by this site.
+- [Changelog](changelog.qmd) for what each release changed.
+- [Source and issues](https://github.com/mcanouil/quarto-better-word) on GitHub.

@@ -9,5 +9,5 @@ authors:
 repository-code: "https://github.com/mcanouil/quarto-better-word"
 url: "https://m.canouil.dev/quarto-better-word"
 license: "MIT License"
-date-released: "2026-07-22"
-version: 0.0.0
+date-released: "2026-08-01"
+version: 0.1.0

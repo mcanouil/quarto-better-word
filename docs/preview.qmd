@@ -41,8 +41,21 @@ The title block above carries the authors on one line with superscript affiliati
 
 A table of contents is included, and a page break separates it from the title block.
 
-| Column | Column |
+| Option | Effect |
 | --- | --- |
-| A | B |
+| `toc: true` | Adds the table of contents above. |
+| `docx-title-page-break: true` | Puts the front matter on its own page. |
 
-: A table. {.striped}
+: The two options this document sets. {tbl-colwidths="[35,65]"}
+
+## A landscape section
+
+The section below turns the page, and the portrait pages either side of it keep the geometry set by `docx-page-width`, `docx-page-height`, and `docx-page-margin`.
+
+::: {.landscape}
+
+| Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 |
+| --- | --- | --- | --- | --- | --- |
+| A | B | C | D | E | F |
+
+:::

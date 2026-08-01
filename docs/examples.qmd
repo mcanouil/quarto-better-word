@@ -66,6 +66,20 @@ title-logo: '![](logo.svg){height=2cm}'
 
 Set as a markdown image rather than a path, so Pandoc emits the image part and its relationship itself.
 
+## A landscape section
+
+````markdown
+::: {.landscape}
+
+| Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 |
+| --- | --- | --- | --- | --- | --- |
+| A | B | C | D | E | F |
+
+:::
+````
+
+The section breaks around the div are built from the same `docx-page-*` values as the rest of the document, so a wide table turns the page without resetting the geometry of the pages either side of it.
+
 ## Without a table of contents
 
 ```yaml

@@ -1,0 +1,96 @@
+---
+title: "Examples"
+subtitle: "The front matter behind the document."
+description: "The metadata that produces the rendered Word document, plus page geometry and a title logo."
+---
+
+The [rendered document](preview.docx) on this site is built by the format as the site is published.
+This page is the front matter behind it.
+
+## The document on this site
+
+```yaml
+title: "A Better Word document"
+subtitle: "Rendered by the format itself"
+author:
+  - name:
+      given: Ada
+      family: Lovelace
+    orcid: 0000-0000-0000-0000
+    email: ada@example.org
+    corresponding: true
+    affiliations:
+      - ref: inst
+  - name:
+      given: Charles
+      family: Babbage
+    affiliations:
+      - ref: inst2
+affiliations:
+  - id: inst
+    name: Example Institute
+    city: London
+    country: United Kingdom
+  - id: inst2
+    name: Another Institute
+    city: Cambridge
+    country: United Kingdom
+abstract: |
+  A short abstract, rendered in the title block.
+format:
+  better-word-docx:
+    toc: true
+    docx-title-page-break: true
+```
+
+Two authors, two affiliations, and one of them corresponding: the title block renders the superscript numbers, the numbered list, and the correspondence line from that alone.
+
+## Page geometry
+
+```yaml
+format:
+  better-word-docx:
+    docx-page-width: 12240
+    docx-page-height: 15840
+    docx-page-margin: 1440
+```
+
+US Letter, with one inch margins.
+The values are twips: A4 is `11906` by `16838`.
+
+## A title logo
+
+```yaml
+title-logo: '![](logo.svg){height=2cm}'
+```
+
+Set as a markdown image rather than a path, so Pandoc emits the image part and its relationship itself.
+
+## A landscape section
+
+````markdown
+::: {.landscape}
+
+| Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 |
+| --- | --- | --- | --- | --- | --- |
+| A | B | C | D | E | F |
+
+:::
+````
+
+The section breaks around the div are built from the same `docx-page-*` values as the rest of the document, so a wide table turns the page without resetting the geometry of the pages either side of it.
+
+## Without a table of contents
+
+```yaml
+format:
+  better-word-docx:
+    toc: false
+    docx-title-page-break: false
+```
+
+The title block then runs straight into the body.
+
+## Source
+
+The repository ships a complete starting point you can copy: [`template.qmd`](https://github.com/mcanouil/quarto-better-word/blob/main/template.qmd).

@@ -1,0 +1,61 @@
+---
+title: "A Better Word document"
+subtitle: "Rendered by the format itself"
+author:
+  - name:
+      given: Ada
+      family: Lovelace
+    orcid: 0000-0000-0000-0000
+    email: ada@example.org
+    corresponding: true
+    affiliations:
+      - ref: inst
+  - name:
+      given: Charles
+      family: Babbage
+    affiliations:
+      - ref: inst2
+affiliations:
+  - id: inst
+    name: Example Institute
+    city: London
+    country: United Kingdom
+  - id: inst2
+    name: Another Institute
+    city: Cambridge
+    country: United Kingdom
+abstract: |
+  A short abstract, rendered in the title block along with the authors,
+  their affiliations, and the correspondence line.
+format:
+  better-word-docx:
+    toc: true
+    docx-title-page-break: true
+---
+
+## A section
+
+The title block above carries the authors on one line with superscript affiliation numbers, a numbered affiliations list, and a correspondence line.
+
+## Another section
+
+A table of contents is included, and a page break separates it from the title block.
+
+| Option | Effect |
+| --- | --- |
+| `toc: true` | Adds the table of contents above. |
+| `docx-title-page-break: true` | Puts the front matter on its own page. |
+
+: The two options this document sets. {tbl-colwidths="[35,65]"}
+
+## A landscape section
+
+The section below turns the page, and the portrait pages either side of it keep the geometry set by `docx-page-width`, `docx-page-height`, and `docx-page-margin`.
+
+::: {.landscape}
+
+| Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 |
+| --- | --- | --- | --- | --- | --- |
+| A | B | C | D | E | F |
+
+:::

@@ -1,0 +1,96 @@
+---
+title: "Reference"
+subtitle: "Every option the better-word format accepts."
+description: "The complete better-word configuration: the options, the title block, the template layout, and what an OpenXML template cannot do."
+---
+
+## Using the format
+
+```yaml
+format:
+  better-word-docx: default
+```
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `toc` | boolean | `true` | Include a table of contents. |
+| `docx-page-width` | integer | `11906` | Page width in twips. |
+| `docx-page-height` | integer | `16838` | Page height in twips. |
+| `docx-page-margin` | integer | `1440` | Margin on all four sides, in twips. |
+| `docx-title-page-break` | boolean | `false` | Break the page after the title block. |
+
+: Options under `better-word-docx`. {.striped .hover tbl-colwidths="[26,12,14,48]"}
+
+Geometry is in twips, being one one-thousand-four-hundred-and-fortieth of an inch.
+A4 is `11906` by `16838`; US Letter is `12240` by `15840`.
+
+## The title block
+
+Built from Quarto's [author and affiliation schema](https://quarto.org/docs/journals/authors.html#author-metadata), and rendering:
+
+- a centred logo, when `title-logo` is set to a markdown image such as `'![](logo.svg){height=2cm}'`;
+- the title, with a rule under it, then the subtitle, the categories, and the description;
+- the authors on one line, with superscript affiliation numbers;
+- a superscript marker on the corresponding author;
+- a numbered affiliations list;
+- a correspondence line with that author's email and ORCID;
+- `date` and `date-modified` as published and modified lines;
+- the `doi`, the abstract, and the keywords.
+
+Pandoc emits the image part and its relationship for the logo automatically.
+
+The DOI, the ORCID, and the email are field-code `HYPERLINK` fields rather than ordinary links, so they are clickable without a `word/document.xml.rels` entry that Word would otherwise report as damage.
+
+The published, modified, and keywords headings come from Quarto's `labels` metadata, so they follow the document language.
+Quarto carries no translation for a DOI heading, and that line is labelled `Doi` in every language.
+
+## How the template is put together
+
+The format wires a custom OpenXML template through Pandoc's `template:` option.
+Unlike a `reference-doc`, which only supplies styles, a template controls the structure of the document.
+
+| File | Holds |
+| --- | --- |
+| `template.xml` | The main skeleton, based on Pandoc's `default.openxml`. |
+| `title-block.xml` | The logo, the title and its rule, the subtitle, the categories, and the description. |
+| `title-metadata.xml` | The authors, affiliations, correspondence line, dates, DOI, abstract, and keywords. |
+| `toc.xml` | The table of contents and the lists of figures and tables. |
+
+: The template and its partials. {.striped .hover tbl-colwidths="[26,74]"}
+
+The split mirrors Quarto's own HTML title block, where `title-block.html` includes `title-metadata.html`.
+Pandoc resolves the partial calls relative to the main template's directory.
+Quarto's own `template-partials` option does not apply to `docx`.
+
+## Landscape sections
+
+A `::: {.landscape}` div gets a section break before and after it, both derived from `docx-page-width`, `docx-page-height`, and `docx-page-margin`, with the width and height swapped for the landscape one.
+
+Quarto's built-in landscape handling writes an empty section break before the div, which drops the preceding section's page size and margins, and a landscape break after it with A4 hardcoded.
+The format removes both and inserts its own, so a document on US Letter stays on US Letter across a landscape section.
+It also strips the `landscape` class, which is what stops the built-in handling from acting on the div a second time.
+
+## What a template cannot do
+
+::: {.callout-important}
+The template renders `word/document.xml` and nothing else.
+
+It can emit any WordprocessingML content: paragraphs, runs, direct formatting, tables, fields, and section properties.
+It cannot create or change other parts of the package.
+:::
+
+| Comes from the template | Comes from Pandoc and the reference document |
+| --- | --- |
+| Document structure, applied styles, direct formatting. | `styles.xml`, headers and footers, media, relationships. |
+
+: The boundary. {.striped .hover tbl-colwidths="[46,54]"}
+
+So the format applies styles and layers direct formatting, and it neither defines styles nor adds running headers and footers.
+
+## Limitations
+
+- Word only.
+- Needs Pandoc 3.2.1 or later, for `--template` with `.docx`.
+- Running headers and footers are out of reach, as above; use a `reference-doc` for those.

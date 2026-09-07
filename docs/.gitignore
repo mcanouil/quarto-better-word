@@ -7,6 +7,10 @@
 /changelog.qmd
 /_variables.yml
 
+# Cached by _scripts/pre-render.sh from GitHub's own preview card for this
+# repository, and kept between renders. See assets/social/README.md.
+/assets/social/og-image.png
+
 # The extension this repository publishes, copied from the root by
 # _scripts/sync-extension.sh under a `local` owner. Everything else under
 # _extensions/ is a committed dependency. See _extensions/README.md.

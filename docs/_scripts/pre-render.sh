@@ -202,3 +202,73 @@ in_version && /^#+ / {
 ' "${ROOT_DIR}/CHANGELOG.md" >"${DOCS_DIR}/changelog.qmd"
 
 printf '[pre-render] CHANGELOG.md -> changelog.qmd\n'
+
+# The Open Graph card, cached from GitHub's own repository preview. The first
+# path segment is a cache key GitHub accepts any value for. Written through a
+# temporary file so a failed fetch cannot truncate a good cache.
+#
+# A card under a day old is left alone. The endpoint rate-limits, and a preview
+# session re-runs this script on every full render, so refetching each time
+# earns a 429 rather than a fresher card. CI checks out a fresh tree, where
+# nothing is cached, so it always fetches.
+#
+# `--retry` covers that rate limiting: curl counts HTTP 429 as a transient
+# error, alongside 408 and the 5xx family, and honours any Retry-After.
+CARD_URL="https://opengraph.githubassets.com/1/${REPO_SLUG}"
+CARD_PATH="${DOCS_DIR}/assets/social/og-image.png"
+
+# GitHub answers 200 with a generic Octocat placeholder, rather than 404, when
+# the repository is private or does not exist. That placeholder must never be
+# published: it carries none of the repository name, description, avatar, or
+# counts that `website.image-alt` tells a screen reader are in the picture.
+#
+# It is told apart by its shape. GitHub renders the placeholder at 1200x630 and
+# a real card at 1200x600, and a PNG carries its height as a big-endian 32-bit
+# integer at byte offset 20, inside the IHDR chunk, which `od` reads without
+# adding an image tool to the render. The placeholder has also been
+# byte-identical across repositories, but a re-encode would change that while
+# the height held, so the height is the more durable of the two signals.
+PLACEHOLDER_HEIGHT="00000276" # 630, against 00000258 for the 600 of a real card
+
+card_height() {
+	od -An -tx1 -j20 -N4 "$1" 2>/dev/null | tr -d ' \n'
+}
+
+# Shared triage for a render with no real card to show. Anything already cached
+# is better than nothing, a publishing render must not go ahead without one, and
+# a local render or a pull request check is not worth failing.
+#
+# Refusing to publish matters because nothing else would notice: Quarto reports
+# a missing include as FATAL and renders the page anyway, and says nothing at
+# all about a `website.image` that does not resolve, so a missing card would
+# reach the live site as an og:image pointing at a 404, behind a green check.
+card_unavailable() {
+	local reason="$1"
+	if [[ -f "${CARD_PATH}" ]]; then
+		printf '[pre-render] warning: %s; keeping the cached card\n' "${reason}" >&2
+		return 0
+	fi
+	if [[ -n "${CI:-}" && "${GITHUB_EVENT_NAME:-}" != "pull_request" ]]; then
+		printf '[pre-render] %s, and nothing is cached; refusing to publish a broken og:image\n' \
+			"${reason}" >&2
+		exit 1
+	fi
+	printf '[pre-render] warning: %s, and nothing is cached; og:image will point at a missing file\n' \
+		"${reason}" >&2
+}
+
+mkdir -p "$(dirname "${CARD_PATH}")"
+if [[ -n "$(find "${CARD_PATH}" -mtime -1 2>/dev/null)" ]]; then
+	printf '[pre-render] Social card cached under a day ago; not refetching\n'
+elif ! curl -fsSL --max-time 20 --retry 3 --retry-delay 2 \
+	"${CARD_URL}" -o "${CARD_PATH}.tmp"; then
+	rm -f "${CARD_PATH}.tmp"
+	card_unavailable "could not fetch ${CARD_URL}"
+elif [[ "$(card_height "${CARD_PATH}.tmp")" == "${PLACEHOLDER_HEIGHT}" ]]; then
+	rm -f "${CARD_PATH}.tmp"
+	card_unavailable "${CARD_URL} returned GitHub's placeholder, so the repository is private or does not exist yet"
+else
+	mv "${CARD_PATH}.tmp" "${CARD_PATH}"
+	printf '[pre-render] %s -> assets/social/og-image.png\n' "${CARD_URL}"
+fi
+

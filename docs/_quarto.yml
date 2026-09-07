@@ -20,9 +20,15 @@ website:
   title: "Better Word"
   description: "A Quarto Word format with a real title block: authors, affiliations, correspondence, and a table of contents, through a custom OpenXML template."
   # No trailing slash: Quarto builds the social image URL by concatenating this
-  # with a leading-slash image path, without normalising.
+  # with the image path, without normalising.
   site-url: &site-url https://m.canouil.dev/quarto-better-word
   repo-url: https://github.com/mcanouil/quarto-better-word
+  open-graph:
+    image: assets/social/og-image.png
+    image-alt: "GitHub's repository card for mcanouil/quarto-better-word: the repository name and its one-line description beside the owner's avatar, over the contributor, issue, star, and fork counts."
+  twitter-card:
+    image: assets/social/og-image.png
+    image-alt: "GitHub's repository card for mcanouil/quarto-better-word: the repository name and its one-line description beside the owner's avatar, over the contributor, issue, star, and fork counts."
   # The Quarto project root is docs/, so the edit and issue links need the
   # subdirectory; without it they point at the repository root and 404.
   repo-subdir: docs

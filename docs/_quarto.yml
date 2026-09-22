@@ -19,15 +19,17 @@ project:
 website:
   title: "Better Word"
   description: "A Quarto Word format with a real title block: authors, affiliations, correspondence, and a table of contents, through a custom OpenXML template."
-  # Written without a trailing slash, for consistency with the other sites.
-  # The social image path below is document-relative, so Quarto joins the two
-  # and a trailing slash here changes nothing. A project-relative path, one
-  # starting with a slash, is concatenated instead, and then a trailing slash
-  # here would double the separator.
+  # No trailing slash: the social image path below starts with one, and Quarto
+  # concatenates the two without normalising, so a trailing slash here gives
+  # `<site-url>//assets/social/og-image.png`.
   site-url: &site-url https://m.canouil.dev/quarto-better-word
   repo-url: https://github.com/mcanouil/quarto-better-word
+  # The leading slash marks a project-relative path, which Quarto turns into
+  # `<site-url>/assets/social/og-image.png` and measures to fill the image
+  # width and height tags. Without it the path is read against the page being
+  # rendered, so a page in a subdirectory asks for a card that is not there.
   open-graph:
-    image: &og-image assets/social/og-image.png
+    image: &og-image /assets/social/og-image.png
     image-alt: &og-alt "GitHub's repository card for mcanouil/quarto-better-word: the repository name and its one-line description beside the owner's avatar, over the contributor, issue, star, and fork counts."
   twitter-card:
     image: *og-image

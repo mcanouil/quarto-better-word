@@ -19,8 +19,11 @@ project:
 website:
   title: "Better Word"
   description: "A Quarto Word format with a real title block: authors, affiliations, correspondence, and a table of contents, through a custom OpenXML template."
-  # Written without a trailing slash, which is the form the rest of the site
-  # configuration assumes.
+  # Written without a trailing slash, for consistency with the other sites.
+  # The social image path below is document-relative, so Quarto joins the two
+  # and a trailing slash here changes nothing. A project-relative path, one
+  # starting with a slash, is concatenated instead, and then a trailing slash
+  # here would double the separator.
   site-url: &site-url https://m.canouil.dev/quarto-better-word
   repo-url: https://github.com/mcanouil/quarto-better-word
   open-graph:
